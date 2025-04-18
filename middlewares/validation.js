@@ -1,5 +1,5 @@
 const { body, validationResult } = require('express-validator');
-const ApiError = require('../utils/errorHandler');
+const {ApiError} = require('../utils/errorHandler');
 
 const validate = (validations) => {
   return async (req, res, next) => {
@@ -33,8 +33,16 @@ const validateLocation = validate([
   body('parentId').optional().isMongoId().withMessage('Invalid parent ID')
 ]);
 
+// Student type validation
+const validateStudentType = validate([
+  body('type').isIn(['school', 'college']).withMessage('Invalid student type'),
+  body('name').trim().notEmpty().withMessage('Name is required'),
+  body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number')
+]);
+
 module.exports = {
   validateAdminLogin,
   validateOTP,
   validateLocation,
+  validateStudentType,
 };
